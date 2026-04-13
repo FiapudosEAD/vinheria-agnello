@@ -3,15 +3,6 @@
 
 ---
 
-## Integrantes
-- Felipe Genistretti Rodrigues – RM 556348
-- Matheus Henriques do Amaral - RM 556957
-- Rafael Porto Annunciato - RM 554939
-- Jeniffer Moraes - RM 555448
-- Pedro Schmitz - RM 555758
-
----
-
 ## Estrutura do Projeto
 
 ```
