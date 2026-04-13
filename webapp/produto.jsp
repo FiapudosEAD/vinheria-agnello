@@ -58,9 +58,7 @@
 </div>
 
 <section class="product-detail" style="padding: 2rem 4rem 5rem;">
-  <div class="product-detail-grid" id="product-detail">
-    <%-- Conteúdo carregado via JavaScript com base no parâmetro ?id= --%>
-  </div>
+  <div class="product-detail-grid" id="product-detail"></div>
 </section>
 
 <footer>
@@ -88,10 +86,21 @@
 
 <script src="js/script.js"></script>
 <script>
-  // Carrega dados do produto com base no ID da URL
-  const params = new URLSearchParams(window.location.search);
-  const productId = parseInt(params.get('id')) || 1;
-  const product = products.find(p => p.id === productId) || products[0];
+  const product = {
+    id: ${vinho.id},
+    name: `${vinho.nome}`,
+    grape: `${vinho.uva}`,
+    region: `${vinho.regiao}`,
+    price: ${vinho.preco},
+    type: `${vinho.tipo}`,
+    stars: ${vinho.avaliacao},
+    description: `${vinho.descricao}`,
+    alcohol: `${vinho.teorAlcoolico}`,
+    year: `${vinho.safra}`,
+    aging: `${vinho.envelhecimento}`,
+    temp: `${vinho.tempServico}`,
+    pairing: `${vinho.harmonizacao}`
+  };
 
   document.getElementById('breadcrumb-name').textContent = product.name;
   document.title = product.name + ' — Agnello';
@@ -117,24 +126,24 @@
       <div class="product-price">R$ \${product.price.toFixed(2).replace('.',',')}</div>
 
       <div class="product-description">
-        \${product.description || 'Vinho selecionado pela equipe da Vinheria Agnello, produzido com as melhores uvas da região. Apresenta aromas intensos e sabor complexo, ideal para momentos especiais. Envelhecido em barris de carvalho francês para um resultado sofisticado e elegante.'}
+        \${product.description}
       </div>
 
       <div class="product-specs-grid">
         <div class="product-spec">
-          <div class="product-spec-val">\${product.alcohol || '13,5%'}</div>
+          <div class="product-spec-val">\${product.alcohol}</div>
           <div class="product-spec-lbl">Vol. Álcool</div>
         </div>
         <div class="product-spec">
-          <div class="product-spec-val">\${product.year || '2022'}</div>
+          <div class="product-spec-val">\${product.year}</div>
           <div class="product-spec-lbl">Safra</div>
         </div>
         <div class="product-spec">
-          <div class="product-spec-val">\${product.aging || '12 meses'}</div>
+          <div class="product-spec-val">\${product.aging}</div>
           <div class="product-spec-lbl">Envelhecimento</div>
         </div>
         <div class="product-spec">
-          <div class="product-spec-val">\${product.temp || '16–18°C'}</div>
+          <div class="product-spec-val">\${product.temp}</div>
           <div class="product-spec-lbl">Temp. Serviço</div>
         </div>
       </div>
@@ -150,7 +159,7 @@
 
       <div class="harmonization">
         <h4>Harmonização</h4>
-        <p>\${product.pairing || 'Carnes vermelhas grelhadas, queijos maturados, massas com molhos encorpados e chocolate amargo.'}</p>
+        <p>\${product.pairing}</p>
       </div>
     </div>
   `;

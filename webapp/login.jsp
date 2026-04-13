@@ -14,7 +14,6 @@
 <div id="cursor-ring"></div>
 
 <div class="auth-page">
-  <!-- Lado visual -->
   <div class="auth-visual">
     <div class="auth-visual-content">
       <svg width="80" height="180" viewBox="0 0 100 300" fill="none" opacity="0.3" style="margin-bottom:2rem;">
@@ -26,7 +25,6 @@
     </div>
   </div>
 
-  <!-- Lado do formulário -->
   <div class="auth-form-side">
     <div class="auth-form-container">
       <a href="index.jsp" class="logo" style="display:inline-block; margin-bottom:2rem; font-size:1.3rem;">
@@ -37,7 +35,6 @@
       <div class="section-label">Acesso</div>
       <h2 class="section-title">Entrar na sua <em>conta</em></h2>
 
-      <%-- Mensagens de erro/sucesso --%>
       <c:if test="${not empty erro}">
         <div class="alert alert-danger">${erro}</div>
       </c:if>
@@ -48,7 +45,7 @@
       <form action="LoginServlet" method="post">
         <div class="form-group">
           <label for="email">E-mail</label>
-          <input type="email" id="email" name="email" placeholder="seu@email.com" required 
+          <input type="email" id="email" name="email" placeholder="seu@email.com" required
                  value="${not empty param.email ? param.email : ''}" />
         </div>
 
@@ -70,7 +67,6 @@
 </div>
 
 <script>
-  // Custom cursor
   const cur = document.getElementById('cursor');
   const ring = document.getElementById('cursor-ring');
   document.addEventListener('mousemove', e => {

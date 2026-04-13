@@ -4,9 +4,11 @@ echo   DEPLOY - Vinheria Agnello (Sprint 2)
 echo ============================================
 echo.
 
-REM === AJUSTE ESTES CAMINHOS ===
-set TOMCAT=C:\Program Files\Apache Software Foundation\Tomcat 10.1
-REM ==============================
+if "%CATALINA_HOME%"=="" (
+    set TOMCAT=C:\Program Files\Apache Software Foundation\Tomcat 10.1
+) else (
+    set TOMCAT=%CATALINA_HOME%
+)
 
 set PROJECT=%~dp0
 set DEPLOY=%TOMCAT%\webapps\vinheria-agnello

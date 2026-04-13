@@ -2,10 +2,6 @@ package com.agnello.model;
 
 import java.time.LocalDate;
 
-/**
- * Modelo de Usuário — representa um cliente da Vinheria Agnello.
- * Mapeado para a tabela USUARIOS no banco de dados.
- */
 public class Usuario {
 
     private int id;
@@ -15,10 +11,8 @@ public class Usuario {
     private String senha;
     private LocalDate dataNascimento;
 
-    // Construtor vazio (necessário para instanciação via DAO)
     public Usuario() {}
 
-    // Construtor completo
     public Usuario(String nome, String sobrenome, String email, String senha, LocalDate dataNascimento) {
         this.nome = nome;
         this.sobrenome = sobrenome;
@@ -27,7 +21,6 @@ public class Usuario {
         this.dataNascimento = dataNascimento;
     }
 
-    // Getters e Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 

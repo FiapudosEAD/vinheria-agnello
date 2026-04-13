@@ -1,8 +1,3 @@
-/* ============================================
-   VINHERIA AGNELLO — JavaScript (Sprint 2)
-   ============================================ */
-
-// --- Custom Cursor ---
 const cur = document.getElementById('cursor');
 const ring = document.getElementById('cursor-ring');
 if (cur && ring) {
@@ -14,7 +9,6 @@ if (cur && ring) {
   });
 }
 
-// --- Header scroll ---
 const hdr = document.getElementById('header');
 if (hdr && !hdr.classList.contains('header-dark')) {
   window.addEventListener('scroll', () => {
@@ -22,13 +16,11 @@ if (hdr && !hdr.classList.contains('header-dark')) {
   });
 }
 
-// --- Reveal on scroll ---
 const observer = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
 }, { threshold: 0.12 });
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-// --- Products Data (simulando o que viria do banco de dados) ---
 const products = [
   {
     id: 1, name: 'Cabernet Sauvignon Reserva', grape: 'Cabernet Sauvignon',
@@ -112,7 +104,6 @@ const products = [
   }
 ];
 
-// --- Cart (persistido no localStorage) ---
 let cart = JSON.parse(localStorage.getItem('agnello_cart') || '[]');
 let activeFilter = 'todos';
 
@@ -142,7 +133,7 @@ function renderProducts() {
     return `
       <div class="product-card reveal visible">
         ${p.badge ? `<div class="product-badge">${p.badge}</div>` : ''}
-        <a href="produto.jsp?id=${p.id}" style="text-decoration:none; color:inherit;">
+        <a href="ProdutoServlet?id=${p.id}" style="text-decoration:none; color:inherit;">
           <div class="product-img-wrap">
             <svg class="bottle-svg" viewBox="0 0 100 300" fill="none">
               <rect x="40" y="0" width="20" height="28" rx="3" fill="${capColor}"/>
@@ -243,6 +234,5 @@ function handleNewsletter(e) {
   e.target.reset();
 }
 
-// --- Init ---
 renderProducts();
 updateCart();

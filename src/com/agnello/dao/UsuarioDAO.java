@@ -2,43 +2,29 @@ package com.agnello.dao;
 
 import com.agnello.model.Usuario;
 import com.agnello.util.ConnectionFactory;
-
 import java.sql.*;
-import java.time.LocalDate;
 
-/**
- * UsuarioDAO — Responsável pelas operações de banco de dados
- * relacionadas aos usuários (CRUD).
- */
 public class UsuarioDAO {
 
-    /**
-     * Cria a tabela USUARIOS caso ela não exista.
-     * Chamado automaticamente na primeira execução.
-     */
     public void criarTabela() {
         String sql = "CREATE TABLE IF NOT EXISTS USUARIOS ("
-                + "id INT AUTO_INCREMENT PRIMARY KEY, "
-                + "nome VARCHAR(100) NOT NULL, "
-                + "sobrenome VARCHAR(100) NOT NULL, "
-                + "email VARCHAR(200) NOT NULL UNIQUE, "
-                + "senha VARCHAR(255) NOT NULL, "
-                + "data_nascimento DATE"
+                + "id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, "
+                + "nome VARCHAR2(100) NOT NULL, "
+                + "sobrenome VARCHAR2(100) NOT NULL, "
+                + "email VARCHAR2(200) NOT NULL UNIQUE, "
+                + "senha VARCHAR2(255) NOT NULL, "
+                + "data_nascimento DATE, "
+                + "data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
                 + ")";
 
         try (Connection conn = ConnectionFactory.getConnection();
              Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("Erro ao criar tabela USUARIOS: " + e.getMessage());
         }
     }
 
-    /**
-     * Insere um novo usuário no banco de dados.
-     * @param usuario Objeto Usuario com os dados a serem inseridos.
-     * @return true se inseriu com sucesso, false se houve erro.
-     */
     public boolean inserir(Usuario usuario) {
         String sql = "INSERT INTO USUARIOS (nome, sobrenome, email, senha, data_nascimento) VALUES (?, ?, ?, ?, ?)";
 
@@ -48,24 +34,21 @@ public class UsuarioDAO {
             ps.setString(2, usuario.getSobrenome());
             ps.setString(3, usuario.getEmail());
             ps.setString(4, usuario.getSenha());
-            ps.setDate(5, usuario.getDataNascimento() != null
-                    ? Date.valueOf(usuario.getDataNascimento())
-                    : null);
+
+            if (usuario.getDataNascimento() != null) {
+                ps.setDate(5, Date.valueOf(usuario.getDataNascimento()));
+            } else {
+                ps.setNull(5, Types.DATE);
+            }
+
             ps.executeUpdate();
             return true;
         } catch (SQLException e) {
-            // Email duplicado ou outro erro
             e.printStackTrace();
             return false;
         }
     }
 
-    /**
-     * Busca um usuário pelo email e senha (login).
-     * @param email E-mail do usuário.
-     * @param senha Senha do usuário.
-     * @return Objeto Usuario se encontrado, null caso contrário.
-     */
     public Usuario buscarPorEmailSenha(String email, String senha) {
         String sql = "SELECT * FROM USUARIOS WHERE email = ? AND senha = ?";
 
@@ -96,11 +79,6 @@ public class UsuarioDAO {
         return null;
     }
 
-    /**
-     * Verifica se já existe um usuário com o email informado.
-     * @param email E-mail a verificar.
-     * @return true se o email já está cadastrado.
-     */
     public boolean emailExiste(String email) {
         String sql = "SELECT COUNT(*) FROM USUARIOS WHERE email = ?";
 

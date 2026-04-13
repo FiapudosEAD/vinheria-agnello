@@ -14,7 +14,6 @@
 <div id="cursor-ring"></div>
 
 <div class="auth-page">
-  <!-- Lado visual -->
   <div class="auth-visual">
     <div class="auth-visual-content">
       <svg width="80" height="180" viewBox="0 0 100 300" fill="none" opacity="0.3" style="margin-bottom:2rem;">
@@ -26,7 +25,6 @@
     </div>
   </div>
 
-  <!-- Lado do formulário -->
   <div class="auth-form-side">
     <div class="auth-form-container">
       <a href="index.jsp" class="logo" style="display:inline-block; margin-bottom:2rem; font-size:1.3rem;">
@@ -45,25 +43,25 @@
         <div class="form-row">
           <div class="form-group">
             <label for="nome">Nome</label>
-            <input type="text" id="nome" name="nome" placeholder="Seu nome" required 
+            <input type="text" id="nome" name="nome" placeholder="Seu nome" required
                    value="${not empty param.nome ? param.nome : ''}" />
           </div>
           <div class="form-group">
             <label for="sobrenome">Sobrenome</label>
-            <input type="text" id="sobrenome" name="sobrenome" placeholder="Seu sobrenome" required 
+            <input type="text" id="sobrenome" name="sobrenome" placeholder="Seu sobrenome" required
                    value="${not empty param.sobrenome ? param.sobrenome : ''}" />
           </div>
         </div>
 
         <div class="form-group">
           <label for="email">E-mail</label>
-          <input type="email" id="email" name="email" placeholder="seu@email.com" required 
+          <input type="email" id="email" name="email" placeholder="seu@email.com" required
                  value="${not empty param.email ? param.email : ''}" />
         </div>
 
         <div class="form-group">
           <label for="dataNascimento">Data de Nascimento</label>
-          <input type="date" id="dataNascimento" name="dataNascimento" required 
+          <input type="date" id="dataNascimento" name="dataNascimento" required
                  value="${not empty param.dataNascimento ? param.dataNascimento : ''}" />
         </div>
 
@@ -100,7 +98,6 @@
     ring.style.top  = e.clientY + 'px';
   });
 
-  // Validação de senha no client-side
   document.querySelector('form').addEventListener('submit', function(e) {
     const senha = document.getElementById('senha').value;
     const confirmar = document.getElementById('confirmarSenha').value;

@@ -9,16 +9,6 @@ import jakarta.servlet.annotation.*;
 import java.io.IOException;
 import java.time.LocalDate;
 
-/**
- * CadastroServlet — Processa o formulário de cadastro de novos usuários.
- * 
- * Fluxo:
- * 1. Recebe dados do formulário (POST)
- * 2. Valida os campos
- * 3. Verifica se email já existe
- * 4. Se OK → insere no banco e redireciona para login.jsp com sucesso
- * 5. Se erro → volta para cadastro.jsp com mensagem de erro
- */
 @WebServlet("/CadastroServlet")
 public class CadastroServlet extends HttpServlet {
 
@@ -35,7 +25,6 @@ public class CadastroServlet extends HttpServlet {
 
         request.setCharacterEncoding("UTF-8");
 
-        // Coleta os dados do formulário
         String nome = request.getParameter("nome");
         String sobrenome = request.getParameter("sobrenome");
         String email = request.getParameter("email");
@@ -43,7 +32,11 @@ public class CadastroServlet extends HttpServlet {
         String confirmarSenha = request.getParameter("confirmarSenha");
         String dataNascStr = request.getParameter("dataNascimento");
 
-        // Validação dos campos obrigatórios
+        request.setAttribute("nome", nome);
+        request.setAttribute("sobrenome", sobrenome);
+        request.setAttribute("email", email);
+        request.setAttribute("dataNascimento", dataNascStr);
+
         if (nome == null || nome.trim().isEmpty() ||
             sobrenome == null || sobrenome.trim().isEmpty() ||
             email == null || email.trim().isEmpty() ||
@@ -53,7 +46,6 @@ public class CadastroServlet extends HttpServlet {
             return;
         }
 
-        // Validação de senha
         if (senha.length() < 6) {
             request.setAttribute("erro", "A senha deve ter pelo menos 6 caracteres.");
             request.getRequestDispatcher("cadastro.jsp").forward(request, response);
@@ -66,34 +58,29 @@ public class CadastroServlet extends HttpServlet {
             return;
         }
 
-        // Verifica se o email já existe
         if (usuarioDAO.emailExiste(email.trim())) {
             request.setAttribute("erro", "Este e-mail já está cadastrado.");
             request.getRequestDispatcher("cadastro.jsp").forward(request, response);
             return;
         }
 
-        // Cria o objeto Usuario
         Usuario usuario = new Usuario();
         usuario.setNome(nome.trim());
         usuario.setSobrenome(sobrenome.trim());
         usuario.setEmail(email.trim());
-        usuario.setSenha(senha); // Em produção, usar hash (BCrypt)
+        usuario.setSenha(senha);
 
-        // Parse da data de nascimento
         if (dataNascStr != null && !dataNascStr.isEmpty()) {
             try {
                 usuario.setDataNascimento(LocalDate.parse(dataNascStr));
             } catch (Exception e) {
-                // Ignora data inválida
+                // data inválida ignorada
             }
         }
 
-        // Insere no banco de dados
         boolean sucesso = usuarioDAO.inserir(usuario);
 
         if (sucesso) {
-            // Redireciona para login com mensagem de sucesso
             request.setAttribute("sucesso", "Conta criada com sucesso! Faça login.");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         } else {
