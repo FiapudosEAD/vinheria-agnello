@@ -1,0 +1,7 @@
+out/
+libs/
+.vscode/
+.git/
+*.bat
+*.sh
+!entrypoint.sh
