@@ -34,12 +34,16 @@ vinheria-agnello/
 ├── src/
 │   └── com/agnello/
 │       ├── model/
-│       │   └── Usuario.java        <- Modelo de dados do usuário
+│       │   ├── Usuario.java        <- Modelo de dados do usuário
+│       │   └── Vinho.java          <- Modelo de dados do vinho
 │       ├── dao/
-│       │   └── UsuarioDAO.java     <- Acesso ao banco de dados (CRUD)
+│       │   ├── UsuarioDAO.java     <- CRUD de usuários
+│       │   └── VinhoDAO.java       <- CRUD de vinhos + seed inicial
 │       ├── servlet/
 │       │   ├── LoginServlet.java   <- Processa login
-│       │   └── CadastroServlet.java<- Processa cadastro
+│       │   ├── CadastroServlet.java <- Processa cadastro
+│       │   ├── CatalogoServlet.java <- Lista vinhos com filtro por tipo
+│       │   └── ProdutoServlet.java  <- Detalhe de um vinho por ID
 │       └── util/
 │           └── ConnectionFactory.java <- Fábrica de conexões JDBC
 ├── sql/
@@ -101,7 +105,7 @@ Crie uma pasta "libs" na raiz do projeto e baixe:
    - API: https://repo1.maven.org/maven2/jakarta/servlet/jsp/jstl/jakarta.servlet.jsp.jstl-api/2.0.0/jakarta.servlet.jsp.jstl-api-2.0.0.jar
    - IMPL: https://repo1.maven.org/maven2/org/glassfish/web/jakarta.servlet.jsp.jstl/2.0.0/jakarta.servlet.jsp.jstl-2.0.0.jar
 
-3. Servlet API: já vem dentro do Tomcat em TOMCAT/lib/servlet-api.jar
+3. Servlet API: copie de TOMCAT/lib/servlet-api.jar para a pasta libs/ do projeto
 
 ---
 
@@ -135,7 +139,7 @@ fazendo o deploy manual. É assim que muitos devs profissionais trabalham.
     - libs/h2-2.2.224.jar
     - libs/jakarta.servlet.jsp.jstl-api-2.0.0.jar
     - libs/jakarta.servlet.jsp.jstl-2.0.0.jar
-    - C:\tomcat10\lib\servlet-api.jar  (IMPORTANTE para compilar Servlets!)
+    - libs/servlet-api.jar  (IMPORTANTE para compilar Servlets!)
 15. Clique Apply -> OK
 
 **Compilando:**
@@ -175,8 +179,7 @@ fazendo o deploy manual. É assim que muitos devs profissionais trabalham.
 ```json
 {
   "java.project.referencedLibraries": [
-    "libs/**/*.jar",
-    "C:/tomcat10/lib/servlet-api.jar"
+    "libs/**/*.jar"
   ],
   "java.project.sourcePaths": ["src"],
   "java.project.outputPath": "out"
@@ -235,8 +238,8 @@ fazendo o deploy manual. É assim que muitos devs profissionais trabalham.
                             [JSP (View)] -> (response) -> [Navegador]
 ```
 
-- Model: Usuario.java — representa os dados
+- Model: Usuario.java, Vinho.java — representam os dados
 - View: Arquivos .jsp — interface visual
-- Controller: LoginServlet, CadastroServlet — lógica de negócio
-- DAO: UsuarioDAO.java — acesso ao banco de dados
+- Controller: LoginServlet, CadastroServlet, CatalogoServlet, ProdutoServlet
+- DAO: UsuarioDAO.java, VinhoDAO.java — acesso ao banco de dados
 - Util: ConnectionFactory.java — gerencia conexões JDBC
