@@ -4,24 +4,11 @@
 ---
 
 ## Integrantes
-
 - Felipe Genistretti Rodrigues – RM 556348
-- Matheus Henriques do Amaral – RM 556957
-- Rafael Porto Annunciato – RM 554939
-- Jeniffer Moraes – RM 555448
-- Pedro Schmitz – RM 555758
-
----
-
-## Tecnologias
-
-- **Java 17+** com Jakarta Servlets
-- **Apache Tomcat 10.1**
-- **JSP + JSTL** para as views
-- **H2 Database** — banco em arquivo local, zero configuração (padrão)
-- **Oracle Cloud ATP** — opcional para produção
-- **HTML5 / CSS3 / JavaScript (ES6)**
-- Padrão **MVC** (Model-View-Controller)
+- Matheus Henriques do Amaral - RM 556957
+- Rafael Porto Annunciato - RM 554939
+- Jeniffer Moraes - RM 555448
+- Pedro Schmitz - RM 555758
 
 ---
 
@@ -29,126 +16,227 @@
 
 ```
 vinheria-agnello/
-├── src/com/agnello/
-│   ├── model/
-│   │   ├── Usuario.java
-│   │   └── Vinho.java
-│   ├── dao/
-│   │   ├── UsuarioDAO.java
-│   │   └── VinhoDAO.java
-│   ├── servlet/
-│   │   ├── LoginServlet.java
-│   │   ├── CadastroServlet.java
-│   │   ├── CatalogoServlet.java
-│   │   └── ProdutoServlet.java
-│   └── util/
-│       └── ConnectionFactory.java
-├── webapp/
-│   ├── WEB-INF/web.xml
-│   ├── css/style.css
-│   ├── js/script.js
-│   ├── index.jsp
-│   ├── login.jsp
-│   ├── cadastro.jsp
-│   ├── catalogo.jsp
-│   ├── produto.jsp
-│   ├── carrinho.jsp
-│   └── logout.jsp
-└── sql/schema.sql     ← DDL para Oracle Cloud (referência)
+├── webapp/                          <- Arquivos Web (deploy no Tomcat)
+│   ├── css/
+│   │   └── style.css               <- CSS completo (Sprint 1 + novas telas)
+│   ├── js/
+│   │   └── script.js               <- JavaScript (catálogo, carrinho, filtros)
+│   ├── WEB-INF/
+│   │   ├── web.xml                 <- Configuração do Servlet Container
+│   │   └── lib/                    <- JARs (H2, JSTL) — você precisa adicionar
+│   ├── index.jsp                   <- Homepage
+│   ├── login.jsp                   <- Tela de login
+│   ├── cadastro.jsp                <- Tela de cadastro
+│   ├── catalogo.jsp                <- Catálogo de vinhos
+│   ├── produto.jsp                 <- Detalhe do produto
+│   ├── carrinho.jsp                <- Página do carrinho
+│   └── logout.jsp                  <- Logout (invalida sessão)
+├── src/
+│   └── com/agnello/
+│       ├── model/
+│       │   └── Usuario.java        <- Modelo de dados do usuário
+│       ├── dao/
+│       │   └── UsuarioDAO.java     <- Acesso ao banco de dados (CRUD)
+│       ├── servlet/
+│       │   ├── LoginServlet.java   <- Processa login
+│       │   └── CadastroServlet.java<- Processa cadastro
+│       └── util/
+│           └── ConnectionFactory.java <- Fábrica de conexões JDBC
+├── sql/
+│   └── schema.sql                  <- Script de criação das tabelas + dados
+├── libs/                           <- Coloque os JARs baixados aqui
+├── deploy.bat                      <- Script de deploy (Windows)
+├── deploy.sh                       <- Script de deploy (Mac/Linux)
+└── README.md                       <- Este arquivo
 ```
+
+---
+
+## CONFIGURAÇÃO DO AMBIENTE (Passo a Passo)
+
+### Passo 1 — Instalar o JDK 17
+
+**Windows:**
+1. Acesse: https://adoptium.net/
+2. Baixe o Temurin JDK 17 (ou superior) para Windows
+3. Execute o instalador — MARQUE a opção "Set JAVA_HOME variable"
+4. Para verificar, abra o CMD e digite:
+   ```
+   java -version
+   javac -version
+   ```
+
+**Mac:**
+```bash
+brew install openjdk@17
+```
+
+---
+
+### Passo 2 — Instalar o Apache Tomcat 10
+
+1. Acesse: https://tomcat.apache.org/download-10.cgi
+2. Na seção "Binary Distributions > Core", baixe:
+   - Windows: 64-bit Windows zip
+   - Mac/Linux: tar.gz
+3. Extraia em uma pasta fácil de encontrar:
+   - Windows: C:\tomcat10
+   - Mac: ~/tomcat10
+4. Teste se funciona:
+   - Windows: abra o CMD e execute C:\tomcat10\bin\startup.bat
+   - Mac: ~/tomcat10/bin/startup.sh
+5. Abra http://localhost:8080 no navegador
+   - Se aparecer a página do Tomcat, está funcionando!
+
+---
+
+### Passo 3 — Baixar as Bibliotecas (JARs)
+
+Crie uma pasta "libs" na raiz do projeto e baixe:
+
+1. H2 Database (banco local para testes):
+   https://repo1.maven.org/maven2/com/h2database/h2/2.2.224/h2-2.2.224.jar
+
+2. JSTL 2.0 (Tags JSP compatíveis com Tomcat 10):
+   - API: https://repo1.maven.org/maven2/jakarta/servlet/jsp/jstl/jakarta.servlet.jsp.jstl-api/2.0.0/jakarta.servlet.jsp.jstl-api-2.0.0.jar
+   - IMPL: https://repo1.maven.org/maven2/org/glassfish/web/jakarta.servlet.jsp.jstl/2.0.0/jakarta.servlet.jsp.jstl-2.0.0.jar
+
+3. Servlet API: já vem dentro do Tomcat em TOMCAT/lib/servlet-api.jar
+
+---
+
+### Passo 4A — IntelliJ IDEA Community (RECOMENDADO)
+
+A versão Community não tem botão "Run on Server", mas funciona perfeitamente
+fazendo o deploy manual. É assim que muitos devs profissionais trabalham.
+
+**Criando o projeto:**
+
+1. Abra o IntelliJ -> New Project
+2. Escolha "Java" no menu da esquerda
+3. JDK: selecione o JDK 17
+4. NÃO selecione nenhum framework
+5. Clique Next -> dê o nome "vinheria-agnello" -> Finish
+
+**Copiando os arquivos do ZIP:**
+
+6. Abra a pasta do projeto no Explorer/Finder
+7. Copie a pasta src/com/ do ZIP para dentro de src/ do projeto IntelliJ
+8. Copie a pasta webapp/ do ZIP para a RAIZ do projeto
+9. Copie a pasta sql/ do ZIP para a RAIZ do projeto
+10. Copie a pasta libs/ (com os JARs) para a RAIZ do projeto
+
+**Configurando as dependências:**
+
+11. File -> Project Structure (Ctrl+Alt+Shift+S)
+12. No menu esquerdo, clique em "Modules"
+13. Aba "Dependencies" -> clique no "+" -> "JARs or Directories"
+14. Adicione TODOS estes JARs:
+    - libs/h2-2.2.224.jar
+    - libs/jakarta.servlet.jsp.jstl-api-2.0.0.jar
+    - libs/jakarta.servlet.jsp.jstl-2.0.0.jar
+    - C:\tomcat10\lib\servlet-api.jar  (IMPORTANTE para compilar Servlets!)
+15. Clique Apply -> OK
+
+**Compilando:**
+
+16. Build -> Build Project (Ctrl+F9)
+17. Se não der erro, os .class ficam em out/production/vinheria-agnello/
+
+**Deploy no Tomcat (use o script ou faça manualmente):**
+
+18. Execute o deploy.bat (Windows) ou deploy.sh (Mac)
+    OU faça manualmente:
+    - Copie webapp/ para TOMCAT/webapps/vinheria-agnello/
+    - Copie out/production/vinheria-agnello/com/ para 
+      TOMCAT/webapps/vinheria-agnello/WEB-INF/classes/com/
+    - Copie os JARs (h2, jstl) para 
+      TOMCAT/webapps/vinheria-agnello/WEB-INF/lib/
+
+**Executando:**
+
+19. Inicie o Tomcat: C:\tomcat10\bin\startup.bat
+20. Acesse: http://localhost:8080/vinheria-agnello/
+21. Para parar: C:\tomcat10\bin\shutdown.bat
+
+---
+
+### Passo 4B — VS Code (Alternativa)
+
+**Extensões necessárias (instale todas):**
+- Extension Pack for Java (Microsoft)
+- Community Server Connectors (Red Hat)
+
+**Configurando:**
+
+1. Abra o VS Code
+2. File -> Open Folder -> pasta vinheria-agnello do ZIP
+3. Crie/edite .vscode/settings.json:
+```json
+{
+  "java.project.referencedLibraries": [
+    "libs/**/*.jar",
+    "C:/tomcat10/lib/servlet-api.jar"
+  ],
+  "java.project.sourcePaths": ["src"],
+  "java.project.outputPath": "out"
+}
+```
+4. O VS Code compila automaticamente ao salvar
+5. Use o mesmo deploy.bat/deploy.sh para copiar ao Tomcat
+
+---
+
+## Integração com Cloud (Oracle Cloud Free Tier)
+
+### Como configurar:
+
+1. Crie conta em https://cloud.oracle.com (Free Tier, grátis)
+
+2. Crie um Autonomous Database:
+   - Menu > Oracle Database > Autonomous Transaction Processing
+   - Nome: agnellodb | Always Free
+   - Defina a senha do ADMIN
+
+3. Baixe o Wallet (Database Connection > Download Wallet)
+
+4. Edite ConnectionFactory.java — descomente OPÇÃO 1 (Oracle):
+   ```java
+   private static final String URL = 
+     "jdbc:oracle:thin:@agnellodb_high?TNS_ADMIN=/caminho/wallet";
+   private static final String USER = "ADMIN";
+   private static final String PASSWORD = "SuaSenha123";
+   ```
+
+5. Adicione ojdbc11.jar na pasta libs/ e WEB-INF/lib/
+
+6. Execute sql/schema.sql no SQL Worksheet do Oracle Cloud
+
+---
+
+## Tecnologias Utilizadas
+
+- Frontend: HTML5, CSS3, JavaScript (ES6)
+- Backend: Java 17, JSP, Servlets
+- Banco de Dados: H2 (local) / Oracle ATP (cloud)
+- Servidor: Apache Tomcat 10
+- Cloud: Oracle Cloud Infrastructure (Free Tier)
+- Padrão de Projeto: MVC (Model-View-Controller)
 
 ---
 
 ## Arquitetura MVC
 
 ```
-[Navegador] → (request) → [Servlet (Controller)]
-                                  |
-                           [DAO (Model)] → [H2 / Oracle]
-                                  |
-                           [JSP (View)] → (response) → [Navegador]
+[Navegador] -> (request) -> [Servlet (Controller)]
+                                   |
+                            [DAO (Model)] -> [Banco de Dados]
+                                   |
+                            [JSP (View)] -> (response) -> [Navegador]
 ```
 
----
-
-## Como Rodar (IntelliJ IDEA + Tomcat 10.1)
-
-### Pré-requisitos
-
-| Ferramenta | Versão mínima |
-|------------|---------------|
-| JDK | 17+ |
-| Apache Tomcat | 10.1 |
-| IntelliJ IDEA | qualquer edição |
-
-JARs necessários (baixe para `%USERPROFILE%\Downloads\`):
-
-| JAR | Link |
-|-----|------|
-| H2 Database | https://repo1.maven.org/maven2/com/h2database/h2/2.2.224/h2-2.2.224.jar |
-| JSTL 1.2 | https://repo1.maven.org/maven2/javax/servlet/jstl/1.2/jstl-1.2.jar |
-
-### Variáveis de Ambiente necessárias
-
-| Variável | Exemplo de valor |
-| -------- | ---------------- |
-| `CATALINA_HOME` | `C:/Program Files/Apache Software Foundation/Tomcat 10.1` |
-| `USERPROFILE` | Definida automaticamente pelo Windows |
-
-### Passos
-
-1. Defina a variável `CATALINA_HOME` apontando para o diretório do Tomcat
-2. Abra o projeto no **IntelliJ IDEA**
-3. **File → Project Structure → Modules → Dependencies** — adicione:
-   - `%USERPROFILE%\Downloads\h2-2.2.224.jar`
-   - `%USERPROFILE%\Downloads\jstl-1.2.jar`
-   - `%CATALINA_HOME%\lib\servlet-api.jar`
-4. Configure o Tomcat em **Run → Edit Configurations → + → Tomcat → Local**
-5. Aba **Deployment**: adicione o artefato exploded apontando para `webapp/`
-6. Clique em **Run** — o banco H2 é criado automaticamente em `%USERPROFILE%\agnello_db`
-7. Acesse `http://localhost:8080`
-
-> As tabelas `USUARIOS` e `VINHOS` (com os 10 vinhos) são criadas e populadas automaticamente na primeira execução. Não é necessário rodar nenhum script SQL.
-
----
-
-## Banco de Dados
-
-O projeto usa **H2** por padrão em modo Oracle-compatível:
-
-```
-URL:      jdbc:h2:~/agnello_db;AUTO_SERVER=TRUE;MODE=Oracle
-Usuário:  sa
-Senha:    (vazia)
-```
-
-Para usar **Oracle Cloud ATP** em produção, edite [ConnectionFactory.java](src/com/agnello/util/ConnectionFactory.java):
-
-```java
-private static final String URL = "jdbc:oracle:thin:@agnellodb_high?TNS_ADMIN=C:/wallet_agnello";
-private static final String USER = "ADMIN";
-private static final String PASSWORD = "SuaSenha";
-private static final String DRIVER = "oracle.jdbc.OracleDriver";
-```
-
-Adicione `ojdbc11.jar` ao classpath e execute `sql/schema.sql` no Oracle SQL Worksheet.
-
----
-
-## Funcionalidades
-
-| Rota | Descrição |
-|------|-----------|
-| `/index.jsp` | Home com vitrine e destaques |
-| `/CatalogoServlet` | Catálogo com filtro por tipo de vinho |
-| `/ProdutoServlet?id=N` | Detalhe do produto |
-| `/CadastroServlet` | Cadastro de novo usuário |
-| `/LoginServlet` | Login com sessão |
-| `/carrinho.jsp` | Carrinho de compras (localStorage) |
-| `/logout.jsp` | Encerramento de sessão |
-
----
-
-## Erros no VS Code
-
-O plugin Java do VS Code pode exibir erros de "cannot find symbol" para classes de servlet. Para resolver, faça **Ctrl+Shift+P → Java: Clean Language Server Workspace** após a configuração inicial. O arquivo [.vscode/settings.json](.vscode/settings.json) já está configurado com os caminhos dos JARs.
+- Model: Usuario.java — representa os dados
+- View: Arquivos .jsp — interface visual
+- Controller: LoginServlet, CadastroServlet — lógica de negócio
+- DAO: UsuarioDAO.java — acesso ao banco de dados
+- Util: ConnectionFactory.java — gerencia conexões JDBC
